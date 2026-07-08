@@ -1,0 +1,279 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Rod//US Open 2026 Schedule//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:US Open Tennis 2026
+X-WR-TIMEZONE:America/New_York
+X-WR-CALDESC:US Open Tennis 2026 Schedule of Play — USTA Billie Jean King National Tennis Center, Flushing Meadows NY
+BEGIN:VTIMEZONE
+TZID:America/New_York
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0500
+TZOFFSETTO:-0400
+TZNAME:EDT
+DTSTART:19700308T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0400
+TZOFFSETTO:-0500
+TZNAME:EST
+DTSTART:19701101T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:usopen2026-fanweek@local
+DTSTAMP:20260421T120000Z
+DTSTART;VALUE=DATE:20260823
+DTEND;VALUE=DATE:20260830
+SUMMARY:US Open Fan Week
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Fan Week (Aug 23–29). Opens with Arthur Ashe Kids' Day. Qualifying Tournament and Mixed Doubles Championship run throughout the week. Free or low-cost grounds admission.
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s01@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260830T120000
+DTEND;TZID=America/New_York:20260830T180000
+SUMMARY:US Open — Session 1: Men's/Women's 1st Round (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 1 (12 PM) — Men's / Women's First Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s02@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260830T190000
+DTEND;TZID=America/New_York:20260830T230000
+SUMMARY:US Open — Session 2: Men's/Women's 1st Round (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 2 (7 PM) — Men's / Women's First Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s03@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260831T120000
+DTEND;TZID=America/New_York:20260831T180000
+SUMMARY:US Open — Session 3: Men's/Women's 1st Round (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 3 (12 PM) — Men's / Women's First Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s04@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260831T190000
+DTEND;TZID=America/New_York:20260831T230000
+SUMMARY:US Open — Session 4: Men's/Women's 1st Round (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 4 (7 PM) — Men's / Women's First Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s05@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260901T120000
+DTEND;TZID=America/New_York:20260901T180000
+SUMMARY:US Open — Session 5: Men's/Women's 1st Round (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 5 (12 PM) — Men's / Women's First Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s06@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260901T190000
+DTEND;TZID=America/New_York:20260901T230000
+SUMMARY:US Open — Session 6: Men's/Women's 1st Round (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 6 (7 PM) — Men's / Women's First Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s07@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260902T120000
+DTEND;TZID=America/New_York:20260902T180000
+SUMMARY:US Open — Session 7: Men's/Women's 2nd Round (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 7 (12 PM) — Men's / Women's Second Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s08@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260902T190000
+DTEND;TZID=America/New_York:20260902T230000
+SUMMARY:US Open — Session 8: Men's/Women's 2nd Round (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 8 (7 PM) — Men's / Women's Second Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s09@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260903T120000
+DTEND;TZID=America/New_York:20260903T180000
+SUMMARY:US Open — Session 9: Men's/Women's 2nd Round (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 9 (12 PM) — Men's / Women's Second Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s10@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260903T190000
+DTEND;TZID=America/New_York:20260903T230000
+SUMMARY:US Open — Session 10: Men's/Women's 2nd Round (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 10 (7 PM) — Men's / Women's Second Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s11@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260904T120000
+DTEND;TZID=America/New_York:20260904T180000
+SUMMARY:US Open — Session 11: Men's/Women's 3rd Round (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 11 (12 PM) — Men's / Women's Third Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s12@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260904T190000
+DTEND;TZID=America/New_York:20260904T230000
+SUMMARY:US Open — Session 12: Men's/Women's 3rd Round (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 12 (7 PM) — Men's / Women's Third Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s13@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260905T120000
+DTEND;TZID=America/New_York:20260905T180000
+SUMMARY:US Open — Session 13: Men's/Women's 3rd Round (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 13 (12 PM) — Men's / Women's Third Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s14@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260905T190000
+DTEND;TZID=America/New_York:20260905T230000
+SUMMARY:US Open — Session 14: Men's/Women's 3rd Round (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 14 (7 PM) — Men's / Women's Third Round
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s15@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260906T120000
+DTEND;TZID=America/New_York:20260906T180000
+SUMMARY:US Open — Session 15: Men's/Women's Round of 16 (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 15 (12 PM) — Men's / Women's Round of 16
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s16@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260906T190000
+DTEND;TZID=America/New_York:20260906T230000
+SUMMARY:US Open — Session 16: Men's/Women's Round of 16 (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 16 (7 PM) — Men's / Women's Round of 16
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s17@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260907T120000
+DTEND;TZID=America/New_York:20260907T180000
+SUMMARY:US Open — Session 17: Men's/Women's Round of 16 (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 17 (12 PM) — Men's / Women's Round of 16
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s18@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260907T190000
+DTEND;TZID=America/New_York:20260907T230000
+SUMMARY:US Open — Session 18: Men's/Women's Round of 16 (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 18 (7 PM) — Men's / Women's Round of 16
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s19@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260908T120000
+DTEND;TZID=America/New_York:20260908T180000
+SUMMARY:US Open — Session 19: Men's/Women's Quarterfinals (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 19 (12 PM) — Men's / Women's Quarterfinals
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s20@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260908T190000
+DTEND;TZID=America/New_York:20260908T230000
+SUMMARY:US Open — Session 20: Men's/Women's Quarterfinals (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 20 (7 PM) — Men's / Women's Quarterfinals
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s21@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260909T120000
+DTEND;TZID=America/New_York:20260909T180000
+SUMMARY:US Open — Session 21: Men's/Women's Quarterfinals (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 21 (12 PM) — Men's / Women's Quarterfinals
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s22@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260909T190000
+DTEND;TZID=America/New_York:20260909T230000
+SUMMARY:US Open — Session 22: Men's/Women's Quarterfinals (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 22 (7 PM) — Men's / Women's Quarterfinals
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s23@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260910T190000
+DTEND;TZID=America/New_York:20260910T230000
+SUMMARY:US Open — Session 23: Women's Semifinals (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 23 (7 PM) — Women's Semifinals
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s24@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260911T120000
+DTEND;TZID=America/New_York:20260911T180000
+SUMMARY:US Open — Session 24: Men's Semifinal 1 (Day)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 24 (12 PM) — Men's Semifinal 1
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s25@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260911T190000
+DTEND;TZID=America/New_York:20260911T230000
+SUMMARY:US Open — Session 25: Men's Semifinal 2 (Night)
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 25 (7 PM) — Men's Semifinal 2
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s26@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260912T120000
+DTEND;TZID=America/New_York:20260912T180000
+SUMMARY:US Open — Session 26: Women's Final / Mixed Doubles Final
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 26 (12 PM) — Women's Final / Mixed Doubles Final
+END:VEVENT
+BEGIN:VEVENT
+UID:usopen2026-s27@local
+DTSTAMP:20260421T120000Z
+DTSTART;TZID=America/New_York:20260913T130000
+DTEND;TZID=America/New_York:20260913T190000
+SUMMARY:US Open — Session 27: Men's Final / Women's Doubles Final
+LOCATION:USTA Billie Jean King National Tennis Center\, Flushing Meadows\, NY
+DESCRIPTION:Session 27 (1 PM) — Men's Final / Women's Doubles Final
+END:VEVENT
+END:VCALENDAR

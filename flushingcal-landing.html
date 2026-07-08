@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flushing Cal — Live calendar feeds for the US Open 2026</title>
+<meta name="description" content="A live-updating calendar subscription for the US Open 2026. Subscribe once, stay current all tournament." />
+<meta name="author" content="40Labs" />
+<meta property="og:title" content="Flushing Cal — Live calendar feeds for the US Open 2026" />
+<meta property="og:description" content="Subscribe once. Stays current through the finals." />
+<meta property="og:type" content="website" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --ink: #0a1930;
+    --ink-2: #132544;
+    --ink-3: #1c2f52;
+    --paper: #f4f1ea;
+    --paper-2: #ece7db;
+    --court: #3a72b8;
+    --court-bright: #5a9bd4;
+    --gold: #c9a94a;
+    --line: rgba(244, 241, 234, 0.12);
+    --line-dark: rgba(10, 25, 48, 0.12);
+    --mute: rgba(244, 241, 234, 0.6);
+    --mute-dark: rgba(10, 25, 48, 0.55);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ============ TOP STRIP ============ */
+  .top {
+    border-bottom: 1px solid var(--line);
+    padding: 18px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mute);
+  }
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .top-mark {
+    color: var(--paper);
+    font-weight: 600;
+  }
+  .top-mark .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-right: 10px;
+    transform: translateY(-1px);
+  }
+  .top-meta { display: flex; gap: 28px; }
+  .top-meta span::before {
+    content: '— ';
+    color: var(--court);
+  }
+
+  /* ============ HERO ============ */
+  .hero {
+    padding: 100px 0 80px;
+    position: relative;
+  }
+
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--court-bright);
+    margin-bottom: 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--court-bright);
+  }
+
+  h1.hero-title {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(52px, 8vw, 120px);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    margin-bottom: 36px;
+    max-width: 14ch;
+  }
+  h1.hero-title em {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--court-bright);
+  }
+
+  .hero-lede {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(18px, 1.6vw, 22px);
+    line-height: 1.5;
+    max-width: 52ch;
+    color: rgba(244, 241, 234, 0.82);
+    margin-bottom: 56px;
+  }
+
+  .hero-cta {
+    display: flex;
+    align-items: baseline;
+    gap: 28px;
+    flex-wrap: wrap;
+  }
+  .primary-cta {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 15px;
+    padding: 18px 32px;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: all 0.3s cubic-bezier(0.2, 0, 0, 1);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .primary-cta:hover {
+    background: var(--gold);
+    transform: translateY(-1px);
+  }
+  .primary-cta svg {
+    width: 14px; height: 14px;
+    transition: transform 0.3s;
+  }
+  .primary-cta:hover svg {
+    transform: translateX(3px);
+  }
+  .secondary-link {
+    color: var(--paper);
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+  .secondary-link:hover { border-color: var(--gold); }
+
+  /* Countdown block */
+  .countdown {
+    position: absolute;
+    top: 100px;
+    right: 40px;
+    border-left: 1px solid var(--line);
+    padding-left: 40px;
+    min-width: 260px;
+  }
+  .countdown-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 16px;
+  }
+  .countdown-num {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: 72px;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--paper);
+  }
+  .countdown-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--court-bright);
+    margin-top: 10px;
+  }
+  .countdown-detail {
+    margin-top: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--mute);
+    letter-spacing: 0.05em;
+    line-height: 1.7;
+  }
+  .countdown-detail span { color: var(--paper); }
+
+  @media (max-width: 900px) {
+    .countdown { position: static; border-left: none; padding-left: 0; margin-top: 48px; }
+  }
+
+  /* ============ SUBSCRIBE PICKER ============ */
+  .picker-section {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 120px 0;
+    position: relative;
+  }
+  .picker-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    margin-bottom: 72px;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .picker-header { grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--court);
+  }
+  .picker-header h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .picker-note {
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--mute-dark);
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+  .picker-note-tag {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-right: 8px;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    vertical-align: 1px;
+  }
+
+  .feeds {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line-dark);
+    border-left: 1px solid var(--line-dark);
+  }
+  @media (max-width: 700px) {
+    .feeds { grid-template-columns: 1fr; }
+  }
+
+  .feed {
+    border-right: 1px solid var(--line-dark);
+    border-bottom: 1px solid var(--line-dark);
+    padding: 40px;
+    transition: background 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+  .feed:hover { background: var(--paper-2); }
+  .feed.featured { background: var(--ink); color: var(--paper); }
+  .feed.featured:hover { background: var(--ink-2); }
+
+  .feed-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--court);
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .feed.featured .feed-label { color: var(--gold); }
+  .feed-label .tag {
+    font-size: 9px;
+    padding: 4px 10px;
+    border: 1px solid currentColor;
+    border-radius: 100px;
+  }
+
+  .feed h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 32px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .feed p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--mute-dark);
+    margin-bottom: 32px;
+    max-width: 38ch;
+  }
+  .feed.featured p { color: rgba(244, 241, 234, 0.7); }
+
+  .feed-meta {
+    display: flex;
+    gap: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--mute-dark);
+    margin-bottom: 32px;
+    letter-spacing: 0.04em;
+  }
+  .feed.featured .feed-meta { color: rgba(244, 241, 234, 0.6); }
+  .feed-meta span::before { content: '◦ '; color: var(--court); }
+  .feed.featured .feed-meta span::before { color: var(--gold); }
+
+  .feed-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .btn-small {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    padding: 9px 16px;
+    border-radius: 2px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-small:hover { background: var(--ink); color: var(--paper); }
+  .btn-small.primary { background: var(--ink); color: var(--paper); }
+  .btn-small.primary:hover { background: var(--court); border-color: var(--court); }
+
+  /* Disabled state — applied to copy buttons while feed data isn't ready */
+  .btn-small[disabled],
+  .row-btn[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: transparent;
+    color: var(--ink);
+    pointer-events: auto; /* keep tooltip working */
+  }
+  .btn-small[disabled]:hover,
+  .row-btn[disabled]:hover {
+    background: transparent;
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .feed.featured .btn-small { border-color: var(--paper); color: var(--paper); }
+  .feed.featured .btn-small:hover { background: var(--paper); color: var(--ink); }
+  .feed.featured .btn-small.primary { background: var(--gold); border-color: var(--gold); color: var(--ink); }
+  .feed.featured .btn-small.primary:hover { background: var(--paper); border-color: var(--paper); }
+
+  /* Per-player section — banner + two-column block + (table when open) */
+  .player-banner {
+    margin-top: 72px;
+    padding: 16px 24px;
+    background: rgba(58, 114, 184, 0.06);
+    border-top: 1px solid rgba(58, 114, 184, 0.18);
+    border-bottom: 1px solid rgba(58, 114, 184, 0.18);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+  .status-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 0 rgba(201, 169, 74, 0.6);
+    animation: pulse 2.5s infinite;
+  }
+  @keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(201, 169, 74, 0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(201, 169, 74, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(201, 169, 74, 0); }
+  }
+
+  .player-block {
+    padding: 64px 0 56px;
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 80px;
+    align-items: start;
+  }
+  @media (max-width: 800px) {
+    .player-block { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 40px; }
+  }
+  .player-intro h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: clamp(28px, 3vw, 36px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .player-intro p {
+    font-size: 15px;
+    color: var(--mute-dark);
+    line-height: 1.55;
+    max-width: 38ch;
+  }
+
+  .player-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 460px;
+  }
+  .player-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mute-dark);
+    margin-bottom: 10px;
+  }
+  .player-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid var(--ink);
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    color: var(--ink);
+    border-radius: 2px;
+  }
+  .player-input:focus {
+    outline: none;
+    border-color: var(--court);
+    box-shadow: 0 0 0 3px rgba(58, 114, 184, 0.15);
+  }
+  .player-input::placeholder { color: var(--mute-dark); }
+
+  .player-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .player-buttons .btn-small {
+    flex: 1;
+    justify-content: center;
+    padding: 11px 16px;
+  }
+
+  .table-toggle {
+    background: none;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mute-dark);
+    cursor: pointer;
+    padding: 18px 0 0;
+    margin-top: 14px;
+    border-top: 1px solid var(--line-dark);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s, gap 0.2s;
+    align-self: flex-start;
+  }
+  .table-toggle:hover { color: var(--ink); gap: 12px; }
+  .table-toggle.open svg { transform: rotate(180deg); }
+  .table-toggle svg { transition: transform 0.3s; }
+
+  /* ============ PLAYER TABLE ============ */
+  .player-table-wrap {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.2, 0, 0, 1), margin 0.5s;
+    margin-top: 0;
+  }
+  .player-table-wrap.open {
+    max-height: 2400px;
+    margin-top: 48px;
+  }
+
+  .table-controls {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .table-tabs {
+    display: inline-flex;
+    border: 1px solid var(--line-dark);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .tab {
+    background: transparent;
+    border: none;
+    padding: 9px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mute-dark);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    border-right: 1px solid var(--line-dark);
+  }
+  .tab:last-child { border-right: none; }
+  .tab.active {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .tab:not(.active):hover { color: var(--ink); background: var(--paper-2); }
+
+  .table-search {
+    flex: 1;
+    min-width: 200px;
+    padding: 10px 14px;
+    border: 1px solid var(--line-dark);
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    border-radius: 2px;
+  }
+  .table-search::placeholder { color: var(--mute-dark); }
+
+  .player-table {
+    border-top: 1px solid var(--line-dark);
+  }
+  .player-row {
+    display: grid;
+    grid-template-columns: 40px 1fr 60px 1fr 100px;
+    align-items: center;
+    padding: 14px 8px;
+    border-bottom: 1px solid var(--line-dark);
+    font-size: 13px;
+    transition: background 0.15s;
+  }
+  .player-row:hover { background: var(--paper-2); }
+  .player-row.hidden { display: none; }
+
+  .row-seed {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--court);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .row-seed.unseeded { color: var(--mute-dark); }
+  .row-name {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .row-country {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--mute-dark);
+  }
+  .row-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .status-pill {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 100px;
+    border: 1px solid currentColor;
+    font-size: 9px;
+  }
+  .status-awaiting { color: var(--mute-dark); }
+  .status-scheduled { color: var(--court); }
+  .status-in-play { color: var(--gold); }
+  .status-out { color: var(--mute-dark); opacity: 0.6; }
+
+  .row-actions {
+    display: flex;
+    gap: 6px;
+    justify-content: flex-end;
+  }
+  .row-btn {
+    background: none;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    padding: 5px 10px;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .row-btn:hover { background: var(--ink); color: var(--paper); }
+  .row-btn.icon { padding: 5px 8px; }
+  .row-btn svg { display: block; }
+
+  .table-empty {
+    padding: 40px 8px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mute-dark);
+  }
+
+  @media (max-width: 700px) {
+    .player-row {
+      grid-template-columns: 36px 1fr auto;
+      grid-template-areas:
+        "seed name actions"
+        "seed country status";
+      row-gap: 4px;
+    }
+    .row-seed { grid-area: seed; }
+    .row-name { grid-area: name; }
+    .row-country { grid-area: country; }
+    .row-status { grid-area: status; }
+    .row-actions { grid-area: actions; }
+  }
+
+  /* ============ HOW IT WORKS ============ */
+  .how {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 140px 0;
+    border-top: 1px solid var(--line);
+  }
+  .how-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    margin-bottom: 80px;
+  }
+  @media (max-width: 900px) {
+    .how-header { grid-template-columns: 1fr; gap: 24px; }
+  }
+  .how-header h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 300;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    max-width: 18ch;
+  }
+  .how-header h2 em {
+    font-style: italic;
+    color: var(--court-bright);
+  }
+
+  .arch {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+  @media (max-width: 900px) {
+    .arch { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 500px) {
+    .arch { grid-template-columns: 1fr; }
+  }
+  .arch-step {
+    padding: 36px 28px;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .arch-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--court-bright);
+    letter-spacing: 0.2em;
+    margin-bottom: 20px;
+  }
+  .arch-icon {
+    width: 40px; height: 40px;
+    margin-bottom: 20px;
+    color: var(--gold);
+  }
+  .arch-step h4 {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .arch-step p {
+    font-size: 13px;
+    color: var(--mute);
+    line-height: 1.6;
+  }
+
+  /* Technical detail strip */
+  .tech-detail {
+    margin-top: 80px;
+    padding-top: 48px;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+  }
+  @media (max-width: 800px) {
+    .tech-detail { grid-template-columns: 1fr 1fr; }
+  }
+  .tech-item {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .tech-item-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 10px;
+  }
+  .tech-item-value {
+    font-size: 14px;
+    color: var(--paper);
+    line-height: 1.5;
+  }
+  .tech-item-value span { color: var(--gold); }
+
+  /* ============ FOOTER ============ */
+  .foot {
+    background: var(--ink-2);
+    border-top: 1px solid var(--line);
+    padding: 72px 0 48px;
+  }
+  .foot-masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  .foot-mark-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 8px;
+  }
+  .foot-mark-name {
+    font-family: 'Fraunces', serif;
+    font-weight: 400;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+    color: var(--paper);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: inline-block;
+  }
+  .foot-mark-name:hover { color: var(--gold); }
+
+  .foot-nav {
+    display: flex;
+    gap: 32px;
+  }
+  .foot-nav a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mute);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .foot-nav a:hover { color: var(--paper); }
+
+  .foot-base {
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--mute);
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .foot-masthead { align-items: flex-start; }
+  }
+
+  /* ============ TOAST ============ */
+  .toast {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ink-3);
+    color: var(--paper);
+    padding: 14px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.2, 0, 0, 1);
+    pointer-events: none;
+    z-index: 200;
+  }
+  .toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+
+  /* Reveal animations */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0, 0, 1), transform 0.8s cubic-bezier(0.2, 0, 0, 1);
+  }
+  [data-reveal].visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  [data-reveal="1"] { transition-delay: 0.05s; }
+  [data-reveal="2"] { transition-delay: 0.15s; }
+  [data-reveal="3"] { transition-delay: 0.25s; }
+  [data-reveal="4"] { transition-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap top-row">
+    <div class="top-mark"><span class="dot"></span>FLUSHING CAL</div>
+  </div>
+</div>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-eyebrow">US OPEN TENNIS — AUG 23 → SEP 13, 2026</div>
+    <h1 class="hero-title">Subscribe once.<br />Stay current <em>through the finals.</em></h1>
+    <p class="hero-lede">
+      A calendar subscription for the US Open. Pick a feed, add it to your calendar, and it stays up to date automatically.
+    </p>
+    <div class="hero-cta">
+      <a href="#feeds" class="primary-cta">
+        Choose a feed
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M1 8H15M15 8L8 1M15 8L8 15" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </a>
+    </div>
+
+    <div class="countdown">
+      <div class="countdown-label">Tournament opens in</div>
+      <div class="countdown-num" id="countdown-num">—</div>
+      <div class="countdown-sub" id="countdown-sub">days · Fan Week</div>
+      <div class="countdown-detail">
+        Main draw — <span>Aug 30</span><br />
+        Women's final — <span>Sep 12</span><br />
+        Men's final — <span>Sep 13</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="picker-section" id="feeds">
+  <div class="wrap">
+    <div class="picker-header">
+      <h2>Four feeds. Pick one or more.</h2>
+      <div class="picker-note">
+        <span class="picker-note-tag">Prototype</span>
+        All feeds currently resolve to the full session schedule. Filtered feeds activate when the tournament starts.
+      </div>
+    </div>
+
+    <div class="feeds">
+      <div class="feed featured" data-reveal="1">
+        <div class="feed-label">
+          <span>Marquee</span>
+          <span class="tag">Most popular</span>
+        </div>
+        <h3>Arthur Ashe Stadium</h3>
+        <p>Every day and night session on the main court.</p>
+        <div class="feed-meta">
+          <span>15 days</span>
+          <span>29 sessions</span>
+        </div>
+        <div class="feed-actions">
+          <button class="btn-small primary" onclick="subscribe('ashe')">Subscribe</button>
+          <button class="btn-small" onclick="copy('ashe')">Copy link</button>
+        </div>
+      </div>
+
+      <div class="feed" data-reveal="2">
+        <div class="feed-label"><span>Complete</span></div>
+        <h3>The full tournament</h3>
+        <p>All sessions across all show courts, from Fan Week through the Men's final.</p>
+        <div class="feed-meta">
+          <span>21 days</span>
+          <span>28+ events</span>
+        </div>
+        <div class="feed-actions">
+          <button class="btn-small primary" onclick="subscribe('all')">Subscribe</button>
+          <button class="btn-small" onclick="copy('all')">Copy link</button>
+        </div>
+      </div>
+
+      <div class="feed" data-reveal="3">
+        <div class="feed-label"><span>Highlights</span></div>
+        <h3>Finals weekend</h3>
+        <p>Semifinals and finals only. Four sessions across four days.</p>
+        <div class="feed-meta">
+          <span>Sep 10–13</span>
+          <span>4 sessions</span>
+        </div>
+        <div class="feed-actions">
+          <button class="btn-small primary" onclick="subscribe('finals')">Subscribe</button>
+          <button class="btn-small" onclick="copy('finals')">Copy link</button>
+        </div>
+      </div>
+
+      <div class="feed" data-reveal="4">
+        <div class="feed-label"><span>Qualifying</span></div>
+        <h3>Fan Week</h3>
+        <p>Qualifiers, Mixed Doubles Championship, and Arthur Ashe Kids' Day.</p>
+        <div class="feed-meta">
+          <span>Aug 23–29</span>
+          <span>Free admission</span>
+        </div>
+        <div class="feed-actions">
+          <button class="btn-small primary" onclick="subscribe('fanweek')">Subscribe</button>
+          <button class="btn-small" onclick="copy('fanweek')">Copy link</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="player-banner" id="status-banner">
+      <span class="status-dot"></span>
+      <span class="status-text">Draw releases Thu, Aug 27 — subscribe now to auto-fill.</span>
+    </div>
+
+    <div class="player-block">
+      <div class="player-intro">
+        <h3>Follow a single player.</h3>
+        <p>Subscribe to a player's draw. Every match they play, first round through final, on your calendar.</p>
+      </div>
+      <div class="player-controls">
+        <label for="player-input" class="player-label">Player</label>
+        <input class="player-input" type="text" list="players" placeholder="Start typing — Alcaraz, Sabalenka…" id="player-input" autocomplete="off" />
+        <datalist id="players"></datalist>
+        <div class="player-buttons">
+          <button class="btn-small primary" onclick="subscribePlayer()">Subscribe</button>
+          <button class="btn-small copy-action" data-copy-target="player" onclick="copyPlayer()">Copy link</button>
+        </div>
+        <button class="table-toggle" onclick="toggleTable()" id="table-toggle">
+          <span id="table-toggle-text">Browse all 128 players</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" id="table-toggle-icon">
+            <path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="player-table-wrap" id="player-table-wrap">
+      <div class="table-controls">
+        <div class="table-tabs">
+          <button class="tab active" data-draw="all" onclick="filterDraw(event, 'all')">All</button>
+          <button class="tab" data-draw="men" onclick="filterDraw(event, 'men')">Men</button>
+          <button class="tab" data-draw="women" onclick="filterDraw(event, 'women')">Women</button>
+        </div>
+        <div class="table-tabs">
+          <button class="tab active" data-view="top" onclick="filterView(event, 'top')">Top seeds</button>
+          <button class="tab" data-view="all" onclick="filterView(event, 'all')">Full draw</button>
+        </div>
+        <input type="text" class="table-search" placeholder="Filter by name or country…" id="table-search" oninput="filterSearch(this.value)" />
+      </div>
+      <div class="player-table" id="player-table"></div>
+      <div class="table-empty" id="table-empty" style="display:none">No players match that filter.</div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-masthead">
+      <div class="foot-mark">
+        <div class="foot-mark-label">A project by</div>
+        <a href="https://40labs.xyz" class="foot-mark-name">40Labs</a>
+      </div>
+      <nav class="foot-nav">
+        <a href="#feeds">Feeds</a>
+        <a href="https://40labs.xyz">Colophon</a>
+      </nav>
+    </div>
+    <div class="foot-base">
+      <div>© 2026 · Not affiliated with the USTA or US Open</div>
+      <div>v1.0 · Last deploy <span id="deploy-time">—</span></div>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+  // Countdown
+  function updateCountdown() {
+    const fanWeek = new Date('2026-08-23T00:00:00-04:00');
+    const mainDraw = new Date('2026-08-30T00:00:00-04:00');
+    const now = new Date();
+    const target = now < fanWeek ? fanWeek : mainDraw;
+    const label = now < fanWeek ? 'days · Fan Week' : 'days · Main draw';
+    const diff = Math.max(0, Math.ceil((target - now) / (1000*60*60*24)));
+    document.getElementById('countdown-num').textContent = diff;
+    document.getElementById('countdown-sub').textContent = label;
+  }
+  updateCountdown();
+
+  // Deploy time
+  document.getElementById('deploy-time').textContent =
+    new Date().toISOString().split('T')[0].replace(/-/g, '.');
+
+  // Toast
+  const toast = document.getElementById('toast');
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  // ============ FEED URL RESOLUTION ============
+  // The four session feeds (Ashe, all, finals, fanweek) currently share one
+  // static ICS file — the full schedule we built and hosted. The Worker will
+  // eventually serve four filtered files, but the session structure inside
+  // is the same. Until then, all four resolve to LIVE_FEED_URL.
+  //
+  // Player feeds (slug starts with "player/") still point at the future
+  // Worker route — those are subscribe-and-wait shells for the auto-fill
+  // mechanic. They 404 until backend exists, which is correct.
+  //
+  // === REPLACE THIS WITH THE HOSTED ICS URL ===
+  // After deploying to Cloudflare Pages / GitHub Pages, paste the full URL.
+  // Must serve Content-Type: text/calendar.
+  const LIVE_FEED_URL = 'https://flushingcal.pages.dev/us_open_2026.ics';
+
+  const LIVE_FEEDS = new Set(['ashe', 'all', 'finals', 'fanweek']);
+
+  function feedUrl(slug) {
+    if (LIVE_FEEDS.has(slug)) return LIVE_FEED_URL;
+    // Future Worker route — currently 404s
+    return 'https://flushingcal.com/cal/' + slug + '.ics';
+  }
+
+  function subscribe(slug) {
+    const url = feedUrl(slug);
+    // Google Calendar subscribe deep link
+    window.open('https://calendar.google.com/calendar/u/0/r?cid=' + encodeURIComponent(url), '_blank');
+    showToast('Opening Google Calendar…');
+  }
+
+  function copy(slug) {
+    const url = feedUrl(slug).replace('https://', 'webcal://');
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('Copied — paste into any calendar app');
+    });
+  }
+
+  function playerSlug() {
+    const name = document.getElementById('player-input').value.trim();
+    if (!name) {
+      showToast('Pick a player first');
+      return null;
+    }
+    return 'player/' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  function subscribePlayer() {
+    const slug = playerSlug();
+    if (slug) subscribe(slug);
+  }
+
+  function copyPlayer() {
+    const slug = playerSlug();
+    if (slug) copy(slug);
+  }
+
+  // ============ PRE-DRAW LOCK ============
+  // Per-player copy buttons point at /cal/player/{slug}.ics — that URL 404s until
+  // the draw releases. Subscribe (via Google Calendar's cid= deep link) is fine
+  // because Google doesn't fetch at subscribe time; the empty feed auto-fills.
+  function applyPreDrawState() {
+    if (TOURNAMENT_STATE !== 'pre-draw') return;
+    document.querySelectorAll('.copy-action').forEach(btn => {
+      btn.setAttribute('disabled', 'disabled');
+      btn.setAttribute('aria-disabled', 'true');
+      btn.setAttribute('title', 'Copy link unlocks when the draw releases — Aug 27');
+    });
+  }
+
+  // ============ PLAYER DATA ============
+  // In production, this is hydrated from /data/players.json — refreshed nightly
+  // by the Cloudflare Worker. Status is computed server-side from upstream draw data.
+  const TOURNAMENT_STATE = computeState();
+
+  function computeState() {
+    const now = new Date();
+    const drawRelease = new Date('2026-08-27T12:00:00-04:00');
+    const start = new Date('2026-08-30T00:00:00-04:00');
+    const end = new Date('2026-09-14T00:00:00-04:00');
+    if (now < drawRelease) return 'pre-draw';
+    if (now < start) return 'draw-released';
+    if (now < end) return 'in-play';
+    return 'concluded';
+  }
+
+  // Top 32 seeds — men. Order is provisional seeding for 2026.
+  const MEN = [
+    ['Carlos Alcaraz','ESP',1],['Jannik Sinner','ITA',2],['Alexander Zverev','GER',3],
+    ['Taylor Fritz','USA',4],['Daniil Medvedev','RUS',5],['Casper Ruud','NOR',6],
+    ['Holger Rune','DEN',7],['Andrey Rublev','RUS',8],['Tommy Paul','USA',9],
+    ['Stefanos Tsitsipas','GRE',10],['Grigor Dimitrov','BUL',11],['Hubert Hurkacz','POL',12],
+    ['Ben Shelton','USA',13],['Frances Tiafoe','USA',14],['Lorenzo Musetti','ITA',15],
+    ['Ugo Humbert','FRA',16],['Felix Auger-Aliassime','CAN',17],['Karen Khachanov','RUS',18],
+    ['Sebastian Korda','USA',19],['Alex de Minaur','AUS',20],['Tomas Machac','CZE',21],
+    ['Nicolas Jarry','CHI',22],['Arthur Fils','FRA',23],['Sebastian Baez','ARG',24],
+    ['Jiri Lehecka','CZE',25],['Alejandro Tabilo','CHI',26],['Jordan Thompson','AUS',27],
+    ['Flavio Cobolli','ITA',28],['Matteo Berrettini','ITA',29],['Brandon Nakashima','USA',30],
+    ['Mariano Navone','ARG',31],['Alex Michelsen','USA',32]
+  ];
+
+  const WOMEN = [
+    ['Aryna Sabalenka','BLR',1],['Iga Swiatek','POL',2],['Coco Gauff','USA',3],
+    ['Jessica Pegula','USA',4],['Elena Rybakina','KAZ',5],['Jasmine Paolini','ITA',6],
+    ['Qinwen Zheng','CHN',7],['Emma Navarro','USA',8],['Madison Keys','USA',9],
+    ['Daria Kasatkina','RUS',10],['Danielle Collins','USA',11],['Barbora Krejcikova','CZE',12],
+    ['Anna Kalinskaya','RUS',13],['Ons Jabeur','TUN',14],['Mirra Andreeva','RUS',15],
+    ['Diana Shnaider','RUS',16],['Beatriz Haddad Maia','BRA',17],['Marta Kostyuk','UKR',18],
+    ['Donna Vekic','CRO',19],['Liudmila Samsonova','RUS',20],['Ekaterina Alexandrova','RUS',21],
+    ['Paula Badosa','ESP',22],['Victoria Azarenka','BLR',23],['Yulia Putintseva','KAZ',24],
+    ['Magdalena Frech','POL',25],['Elina Svitolina','UKR',26],['Karolina Muchova','CZE',27],
+    ['Anastasia Pavlyuchenkova','RUS',28],['Linda Noskova','CZE',29],['Leylah Fernandez','CAN',30],
+    ['Katie Boulter','GBR',31],['Sloane Stephens','USA',32]
+  ];
+
+  // Notable unseeded entries (qualifiers, wildcards, returning stars).
+  // In production these come from the entry list; here it's a representative sample
+  // so "Full draw" toggle has meaningful data to show.
+  const UNSEEDED_MEN = [
+    ['Novak Djokovic','SRB'],['Stan Wawrinka','SUI'],['Gael Monfils','FRA'],
+    ['Cameron Norrie','GBR'],['Dan Evans','GBR'],['Jack Draper','GBR'],
+    ['Jakub Mensik','CZE'],['Joao Fonseca','BRA'],['Learner Tien','USA'],
+    ['Marcos Giron','USA'],['Aleksandar Vukic','AUS'],['Adam Walton','AUS']
+  ];
+  const UNSEEDED_WOMEN = [
+    ['Naomi Osaka','JPN'],['Caroline Garcia','FRA'],['Belinda Bencic','SUI'],
+    ['Sofia Kenin','USA'],['Amanda Anisimova','USA'],['Peyton Stearns','USA'],
+    ['Anhelina Kalinina','UKR'],['Jaqueline Cristian','ROU'],['Tatjana Maria','GER'],
+    ['McCartney Kessler','USA'],['Lulu Sun','NZL'],['Iva Jovic','USA']
+  ];
+
+  function slugify(name) {
+    return name.toLowerCase()
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '');
+  }
+
+  function buildPlayers() {
+    const players = [];
+    MEN.forEach(([name, country, seed]) =>
+      players.push({ name, country, seed, draw: 'men', isTop: true, slug: slugify(name) })
+    );
+    WOMEN.forEach(([name, country, seed]) =>
+      players.push({ name, country, seed, draw: 'women', isTop: true, slug: slugify(name) })
+    );
+    UNSEEDED_MEN.forEach(([name, country]) =>
+      players.push({ name, country, seed: null, draw: 'men', isTop: false, slug: slugify(name) })
+    );
+    UNSEEDED_WOMEN.forEach(([name, country]) =>
+      players.push({ name, country, seed: null, draw: 'women', isTop: false, slug: slugify(name) })
+    );
+    return players;
+  }
+
+  const PLAYERS = buildPlayers();
+
+  // ============ STATUS BANNER ============
+  function renderStatusBanner() {
+    const banner = document.getElementById('status-banner');
+    const text = banner.querySelector('.status-text');
+    const messages = {
+      'pre-draw': 'Draw releases Thu, Aug 27 — subscribe now to auto-fill.',
+      'draw-released': 'Draw is live · feeds populating now.',
+      'in-play': 'Tournament in play · feeds updating nightly.',
+      'concluded': 'Tournament concluded · feeds archived.'
+    };
+    text.textContent = messages[TOURNAMENT_STATE];
+  }
+  renderStatusBanner();
+  applyPreDrawState();
+
+  function statusPill() {
+    // Per-player status — in production this comes from the player record itself,
+    // since some players will be out while others are still in.
+    if (TOURNAMENT_STATE === 'pre-draw') {
+      return '<span class="status-pill status-awaiting">Awaiting draw</span>';
+    }
+    if (TOURNAMENT_STATE === 'draw-released') {
+      return '<span class="status-pill status-scheduled">Scheduled</span>';
+    }
+    if (TOURNAMENT_STATE === 'in-play') {
+      return '<span class="status-pill status-in-play">In play</span>';
+    }
+    return '<span class="status-pill status-out">—</span>';
+  }
+
+  // ============ DATALIST ============
+  function renderDatalist() {
+    const dl = document.getElementById('players');
+    // Show top seeds in the dropdown by default — that's the high-intent path
+    dl.innerHTML = PLAYERS
+      .filter(p => p.isTop)
+      .map(p => `<option value="${p.name}"></option>`)
+      .join('');
+  }
+  renderDatalist();
+
+  // ============ TABLE ============
+  let filterState = { draw: 'all', view: 'top', search: '' };
+
+  function renderTable() {
+    const table = document.getElementById('player-table');
+    table.innerHTML = PLAYERS.map(p => {
+      const seedDisplay = p.seed ? `[${p.seed}]` : 'UNS';
+      const seedClass = p.seed ? 'row-seed' : 'row-seed unseeded';
+      return `
+        <div class="player-row" data-draw="${p.draw}" data-top="${p.isTop}" data-search="${p.name.toLowerCase()} ${p.country.toLowerCase()}">
+          <div class="${seedClass}">${seedDisplay}</div>
+          <div class="row-name">${p.name}</div>
+          <div class="row-country">${p.country}</div>
+          <div class="row-status">${statusPill()}</div>
+          <div class="row-actions">
+            <button class="row-btn" onclick="subscribe('player/${p.slug}')">Subscribe</button>
+            <button class="row-btn icon copy-action" data-copy-target="player/${p.slug}" onclick="copy('player/${p.slug}')" title="Copy link">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="5" y="5" width="9" height="9" rx="1"/>
+                <path d="M11 5V3a1 1 0 00-1-1H3a1 1 0 00-1 1v7a1 1 0 001 1h2"/>
+              </svg>
+            </button>
+          </div>
+        </div>`;
+    }).join('');
+    applyFilters();
+    applyPreDrawState();
+  }
+
+  function applyFilters() {
+    const rows = document.querySelectorAll('.player-row');
+    let visible = 0;
+    rows.forEach(row => {
+      const matchesDraw = filterState.draw === 'all' || row.dataset.draw === filterState.draw;
+      const matchesView = filterState.view === 'all' || row.dataset.top === 'true';
+      const matchesSearch = !filterState.search || row.dataset.search.includes(filterState.search);
+      const show = matchesDraw && matchesView && matchesSearch;
+      row.classList.toggle('hidden', !show);
+      if (show) visible++;
+    });
+    document.getElementById('table-empty').style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  function filterDraw(e, draw) {
+    filterState.draw = draw;
+    document.querySelectorAll('.tab[data-draw]').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    applyFilters();
+  }
+  function filterView(e, view) {
+    filterState.view = view;
+    document.querySelectorAll('.tab[data-view]').forEach(t => t.classList.remove('active'));
+    e.target.classList.add('active');
+    applyFilters();
+  }
+  function filterSearch(val) {
+    filterState.search = val.trim().toLowerCase();
+    applyFilters();
+  }
+
+  function toggleTable() {
+    const wrap = document.getElementById('player-table-wrap');
+    const toggle = document.getElementById('table-toggle');
+    const text = document.getElementById('table-toggle-text');
+    const isOpen = wrap.classList.toggle('open');
+    toggle.classList.toggle('open');
+    text.textContent = isOpen ? 'Hide table' : 'View all 128';
+    if (isOpen && !wrap.dataset.rendered) {
+      renderTable();
+      wrap.dataset.rendered = '1';
+    }
+  }
+
+  // Reveal on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('[data-reveal]').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
