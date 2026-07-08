@@ -1107,14 +1107,14 @@
   // === REPLACE THIS WITH THE HOSTED ICS URL ===
   // After deploying to Cloudflare Pages / GitHub Pages, paste the full URL.
   // Must serve Content-Type: text/calendar.
-  const LIVE_FEED_URL = 'https://flushingcal.pages.dev/us_open_2026.ics';
+  const LIVE_FEED_URL = 'https://usopen2026.40labs.xyz/cal/all.ics';
 
   const LIVE_FEEDS = new Set(['ashe', 'all', 'finals', 'fanweek']);
 
   function feedUrl(slug) {
     if (LIVE_FEEDS.has(slug)) return LIVE_FEED_URL;
     // Future Worker route — currently 404s
-    return 'https://flushingcal.com/cal/' + slug + '.ics';
+    return 'https://usopen2026.40labs.xyz/cal/' + slug + '.ics';
   }
 
   function subscribe(slug) {
